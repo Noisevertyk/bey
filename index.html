@@ -12,27 +12,57 @@
     background: #faf7f2;
     color: #2b2b2b;
     line-height: 1.5;
-    padding-bottom: 40px;
+    padding-bottom: 100px;
   }
 
   header {
     background: linear-gradient(135deg, #6b4226, #a0522d);
     color: #fff;
-    padding: 32px 20px;
+    padding: 24px 20px;
     text-align: center;
     border-radius: 0 0 24px 24px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
   }
-  header h1 { font-size: 28px; letter-spacing: 1px; margin-bottom: 6px; }
-  header p { font-size: 14px; opacity: 0.85; }
+
+  .header-inner {
+    max-width: 640px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .logo {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #fff;
+    padding: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    flex-shrink: 0;
+  }
+
+  .header-text { text-align: left; }
+
+  header h1 {
+    font-size: 24px;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    line-height: 1.2;
+  }
+  header p { font-size: 13px; opacity: 0.85; }
+
+  @media (max-width: 420px) {
+    .header-inner { gap: 12px; }
+    .logo { width: 52px; height: 52px; }
+    header h1 { font-size: 20px; }
+  }
 
   .container { max-width: 640px; margin: 0 auto; padding: 20px; }
 
-  /* КАТЕГОРИЯ — <details> */
-  details.category {
-    margin-top: 28px;
-    border-radius: 8px;
-  }
+  details.category { margin-top: 28px; }
 
   details.category > summary {
     list-style: none;
@@ -53,7 +83,6 @@
   details.category > summary::-webkit-details-marker { display: none; }
   details.category > summary::marker { content: ""; }
 
-  /* Стрелка */
   details.category > summary::after {
     content: "▼";
     font-size: 14px;
@@ -63,10 +92,7 @@
   details.category[open] > summary::after { transform: rotate(0deg); }
   details.category:not([open]) > summary::after { transform: rotate(-90deg); }
 
-  /* Плавное появление содержимого */
-  details.category[open] > .category-items {
-    animation: fadeIn 0.3s ease;
-  }
+  details.category[open] > .category-items { animation: fadeIn 0.3s ease; }
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-4px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -75,27 +101,64 @@
   .item {
     background: #fff;
     border-radius: 14px;
-    padding: 14px 16px;
     margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-    transition: transform 0.15s ease;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease;
   }
-  .item:active { transform: scale(0.98); }
+  .item:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.10); }
 
-  .item-info { flex: 1; }
-  .item-info h3 { font-size: 16px; margin-bottom: 4px; color: #2b2b2b; }
-  .item-info p { font-size: 13px; color: #888; }
+  .item-details { display: block; }
+
+  .item-details > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 12px;
+    user-select: none;
+    transition: background 0.15s ease;
+  }
+  .item-details > summary:hover { background: #fdfaf6; }
+  .item-details > summary::-webkit-details-marker { display: none; }
+  .item-details > summary::marker { content: ""; }
+
+  .item-info { min-width: 0; }
+  .item-info h3 {
+    font-size: 16px;
+    margin-bottom: 2px;
+    color: #2b2b2b;
+    line-height: 1.35;
+    word-wrap: break-word;
+  }
+  .item-info p {
+    font-size: 13px;
+    color: #888;
+    margin-top: 2px;
+    line-height: 1.45;
+  }
 
   .price {
     font-weight: 700;
     color: #e63946;
     white-space: nowrap;
     font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    min-width: 70px;
   }
+
+  .price::after {
+    content: "▾";
+    font-size: 12px;
+    color: #bbb;
+    transition: transform 0.3s ease;
+  }
+  .item-details[open] .price::after { transform: rotate(180deg); }
 
   .badge {
     display: inline-block;
@@ -108,273 +171,902 @@
     vertical-align: middle;
   }
 
+  .item-extra {
+    padding: 0 16px 16px 16px;
+    animation: slideDown 0.3s ease;
+  }
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .item-extra img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+    margin-bottom: 10px;
+    background: #f0ebe3;
+  }
+
+  .item-extra .desc {
+    font-size: 13.5px;
+    color: #555;
+    line-height: 1.55;
+  }
+
   footer {
     text-align: center;
     font-size: 12px;
     color: #aaa;
     margin-top: 36px;
   }
+
+  .whatsapp-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #25D366;
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 22px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 15px;
+    box-shadow: 0 6px 18px rgba(37, 211, 102, 0.45);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    z-index: 1000;
+    white-space: nowrap;
+  }
+  .whatsapp-btn:hover {
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 8px 22px rgba(37, 211, 102, 0.55);
+  }
+  .whatsapp-btn:active {
+    transform: translateX(-50%) scale(0.97);
+  }
+  .whatsapp-btn svg {
+    width: 22px;
+    height: 22px;
+    fill: #fff;
+    flex-shrink: 0;
+  }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>RESTORAN "BƏY BAĞI"</h1>
-  <p>Ayləvi restoran</p>
+  <div class="header-inner">
+    <img class="logo" src="logo.png" alt="Bəy Bağı logo">
+    <div class="header-text">
+      <h1>RESTORAN "BƏY BAĞI"</h1>
+      <p>Ayləvi restoran</p>
+    </div>
+  </div>
 </header>
 
 <div class="container">
 
-  <!-- Səhər yeməkləri -->
+  <!-- ========== SƏHƏR YEMƏKLƏRİ ========== -->
   <details class="category">
     <summary>🍳 SƏHƏR YEMƏKLƏRİ</summary>
     <div class="category-items">
-      <div class="item"><div class="item-info"><h3>YAĞ-PENDİR</h3></div><div class="price">4 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>ŞOR</h3></div><div class="price">2 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>BAL-QAYMAQ</h3></div><div class="price">6 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>SÜDLÜ OMLET</h3></div><div class="price">2 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>QAYĞANAQ</h3></div><div class="price">2 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>POMİDOR-YUMURTA <span class="badge">хит</span></h3></div><div class="price">3 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>SOSISKA</h3></div><div class="price">3 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>SOSISKA-YUMURTA</h3></div><div class="price">4 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>SƏHƏR SETI</h3><p>1 nafer üçün: yag.pendir,xama,bal,sosiska,yumurta,xiyar,pomidor, zeytun,çörak,lavas</p></div><div class="price">12 ₼</div></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>YAĞ-PENDİR</h3></div><div class="price">4 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=YAG-PENDIR" alt="YAĞ-PENDİR"><p class="desc">Təzə kərə yağı və ev pendiri, isti çörəklə verilir.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>ŞOR</h3></div><div class="price">2 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=SHOR" alt="ŞOR"><p class="desc">Ənənəvi şor, çay ilə əla gedir.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>BAL-QAYMAQ</h3></div><div class="price">8 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=BAL-QAYMAQ" alt="BAL-QAYMAQ"><p class="desc">Təbii bal və ev qaymağı, səhər yeməyi üçün ideal.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>SÜDLÜ OMLET</h3></div><div class="price">3 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=SÜDLÜ+OMLET" alt="SÜDLÜ OMLET"><p class="desc">Yumşaq, südlü omlet — yüngül səhər yeməyi.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>QAYĞANAQ</h3></div><div class="price">2 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=QAYGANAG" alt="QAYĞANAQ"><p class="desc">Ənənəvi qayğanaq, göyərti ilə bəzədilmiş.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>POMİDOR-YUMURTA <span class="badge">хит</span></h3></div><div class="price">4 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=POMIDOR-YUMURTA" alt="POMİDOR-YUMURTA"><p class="desc">Təzə pomidor və yumurta, tavada bişirilmiş.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>SOSISKA</h3></div><div class="price">3 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=SOSISKA" alt="SOSISKA"><p class="desc">Qızardılmış sosiska, pomidor sousu ilə.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>SOSISKA-YUMURTA</h3></div><div class="price">5 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=SOSISKA-YUMURTA" alt="SOSISKA-YUMURTA"><p class="desc">Sosiska və yumurta tavada, isti çörəklə.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>SƏHƏR SETI</h3><p>1 nəfər üçün</p></div><div class="price">15 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=SƏHƏR+SETI" alt="SƏHƏR SETI"><p class="desc">1 nəfər üçün: yağ, pendir, xama, bal, sosiska, yumurta, xiyar, pomidor, zeytun, çörək, lavaş.</p></div>
+      </details></div>
+
     </div>
   </details>
 
-  <!-- SOYUQ QƏLYANALTILAR -->
+  <!-- ========== SOYUQ QƏLYANALTILAR ========== -->
   <details class="category">
     <summary>🥗 SOYUQ QƏLYANALTILAR</summary>
     <div class="category-items">
-      <div class="item"><div class="item-info"><h3>PENDİR</h3></div><div class="price">3 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>MOTAL PENDİR</h3></div><div class="price">3 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>SÜZMƏ</h3></div><div class="price">2 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>QATIQ</h3></div><div class="price">2 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>TƏRƏVƏZ BUKETİ</h3></div><div class="price">4 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>ZEYTUN ASSORTİ</h3></div><div class="price">4 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>PAŞTET</h3></div><div class="price">3 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>TOYUQ RULETİ</h3></div><div class="price">4 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>ÇOBAN SALATI <span class="badge">хит</span></h3></div><div class="price">3 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>DİDMƏ SALATI</h3></div><div class="price">4 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>GÖBƏLƏK SALATI</h3></div><div class="price">4 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>SEZAR SALATI</h3></div><div class="price">7 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>MANQAL SALATI</h3></div><div class="price">4 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>PAYTAXT SALATI</h3></div><div class="price">4 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>SUXARİ SALATI</h3></div><div class="price">4 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>"BƏY" SALATI</h3></div><div class="price">8 ₼</div></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>PENDİR</h3></div><div class="price">3 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=PENDIR" alt="PENDİR"><p class="desc">Ev şəraitində hazırlanmış ağ pendir.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>MOTAL PENDİR</h3></div><div class="price">5 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=MOTAL+PENDIR" alt="MOTAL PENDİR"><p class="desc">Motal pendiri — xüsusi dad və ətir.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>SÜZMƏ</h3></div><div class="price">2 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=SUZME" alt="SÜZMƏ"><p class="desc">Süzülmüş qatıq — qəlyanaltı üçün mükəmməl.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>QATIQ</h3></div><div class="price">2 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=QATIQ" alt="QATIQ"><p class="desc">Təzə ev qatığı.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>TƏRƏVƏZ BUKETİ</h3></div><div class="price">5 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=TEREVEZ+BUKETI" alt="TƏRƏVƏZ BUKETİ"><p class="desc">Mövsümi təzə tərəvəzlər buketi.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>ZEYTUN ASSORTİ</h3></div><div class="price">5 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=ZEYTUN+ASSORTI" alt="ZEYTUN ASSORTİ"><p class="desc">Yaşıl və qara zeytunların assortimenti.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>PAŞTET</h3></div><div class="price">4 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=PASTET" alt="PAŞTET"><p class="desc">Nazik paştet, çörəklə verilir.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>TOYUQ RULETİ</h3></div><div class="price">5 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=TOYUQ+RULETI" alt="TOYUQ RULETİ"><p class="desc">Toyuq filesindən hazırlanmış rulet.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>ÇOBAN SALATI <span class="badge">хит</span></h3></div><div class="price">3.5 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=ÇOBAN+SALATI" alt="ÇOBAN SALATI"><p class="desc">Pomidor, xiyar, göyərti — klassik çoban salatı.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>DİDMƏ SALATI</h3></div><div class="price">4 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=DIDME+SALATI" alt="DİDMƏ SALATI"><p class="desc">Klassik didmə salatı, xüsusi sous ilə.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>GÖBƏLƏK SALATI</h3></div><div class="price">4 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=GOBELEK+SALATI" alt="GÖBƏLƏK SALATI"><p class="desc">Turşu göbələklərdən hazırlanmış salat.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>SEZAR SALATI</h3></div><div class="price">8 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=SEZAR+SALATI" alt="SEZAR SALATI"><p class="desc">Toyuq, parmezan, suxari və Sezar sousu ilə.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>MANQAL SALATI</h3></div><div class="price">4 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=MANQAL+SALATI" alt="MANQAL SALATI"><p class="desc">Manqalda bişirilmiş tərəvəzlərdən salat.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>PAYTAXT SALATI</h3></div><div class="price">4 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=PAYTAXT+SALATI" alt="PAYTAXT SALATI"><p class="desc">Paytaxt üslubunda hazırlanmış xüsusi salat.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>SUXARİ SALATI</h3></div><div class="price">4 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=SUXARI+SALATI" alt="SUXARİ SALATI"><p class="desc">Suxarı, toyuq və tərəvəzlərlə dadlı salat.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>"BƏY" SALATI</h3></div><div class="price">10 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=BƏY+SALATI" alt="BƏY SALATI"><p class="desc">Restoranın xüsusi salatı — mal əti, göbələk və pendir ilə.</p></div>
+      </details></div>
+
     </div>
   </details>
 
-  <!-- İSTİ QƏLYANALTILAR -->
+  <!-- ========== İSTİ QƏLYANALTILAR ========== -->
   <details class="category">
     <summary>🫓 İSTİ QƏLYANALTILAR</summary>
     <div class="category-items">
-      <div class="item"><div class="item-info"><h3>KÜKÜ</h3></div><div class="price">3 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>BLİNÇİK ƏTLİ</h3></div><div class="price">2 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>BLİNÇİK KƏSMİKLİ</h3></div><div class="price">1.50 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>KƏTƏ YAĞLI</h3></div><div class="price">2 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>KƏTƏ XAMALI</h3></div><div class="price">2.50 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>QUTAB</h3></div><div class="price">3.50 ₼</div></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>KÜKÜ</h3></div><div class="price">5 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=KÜKÜ" alt="KÜKÜ"><p class="desc">Göyərti ilə hazırlanmış ənənəvi kükü.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>BLİNÇİK ƏTLİ</h3></div><div class="price">2 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=BLİNÇİK+ƏTLİ" alt="BLİNÇİK ƏTLİ"><p class="desc">Ət içlikli nazik blinçik.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>BLİNÇİK KƏSMİKLİ</h3></div><div class="price">1.50 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=BLİNÇİK+KƏSMİKLİ" alt="BLİNÇİK KƏSMİKLİ"><p class="desc">Kəsmik içlikli blinçik.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>KƏTƏ YAĞLI</h3></div><div class="price">2 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=KƏTƏ+YAĞLI" alt="KƏTƏ YAĞLI"><p class="desc">Yağlı və ətirli kətə.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>KƏTƏ XAMALI</h3></div><div class="price">2.50 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=KƏTƏ+XAMALI" alt="KƏTƏ XAMALI"><p class="desc">Xama içlikli şirin kətə.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>QUTAB</h3></div><div class="price">3.50 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=QUTAB" alt="QUTAB"><p class="desc">Ət, göyərti və ya kəsmik içlikli qutab.</p></div>
+      </details></div>
+
     </div>
   </details>
 
-  <!-- ŞORBALAR -->
+  <!-- ========== ŞORBALAR ========== -->
   <details class="category">
     <summary>🍲 ŞORBALAR</summary>
     <div class="category-items">
-      <div class="item"><div class="item-info"><h3>DÜŞBƏRƏ ŞORBASI</h3></div><div class="price">3 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>GÖBƏLƏK ŞORBASI</h3></div><div class="price">3 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>MƏRCİ ŞORBASI</h3></div><div class="price">3 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>CÜCƏ ŞORBASI</h3></div><div class="price">3 ₼</div></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>DÜŞBƏRƏ ŞORBASI</h3></div><div class="price">3 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=DÜŞBƏRƏ" alt="DÜŞBƏRƏ ŞORBASI"><p class="desc">Xırda düşbərə ilə ənənəvi şorba.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>GÖBƏLƏK ŞORBASI</h3></div><div class="price">3 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=GÖBƏLƏK+ŞORBASI" alt="GÖBƏLƏK ŞORBASI"><p class="desc">Təzə göbələklərdən hazırlanmış qatı şorba.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>MƏRCİ ŞORBASI</h3></div><div class="price">3 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=MƏRCİ+ŞORBASI" alt="MƏRCİ ŞORBASI"><p class="desc">Mərci və tərəvəzlərlə qatı şorba.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>CÜCƏ ŞORBASI</h3></div><div class="price">3 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=CÜCƏ+ŞORBASI" alt="CÜCƏ ŞORBASI"><p class="desc">Ev toyuğundan hazırlanmış şəfalı şorba.</p></div>
+      </details></div>
+
     </div>
   </details>
 
-  <!-- TOYUQ YEMƏKLƏRİ -->
+  <!-- ========== TOYUQ YEMƏKLƏRİ ========== -->
   <details class="category">
     <summary>🍗 TOYUQ YEMƏKLƏRİ</summary>
     <div class="category-items">
-      <div class="item"><div class="item-info"><h3>ALBALILI TOYUQ QOVURMASI</h3></div><div class="price">₼</div></div>
-      <div class="item"><div class="item-info"><h3>TOYUQ ÇIĞIRTMASI</h3></div><div class="price">20 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>TOYUQ QOVURMASI</h3></div><div class="price">18 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>QAYMAQLI TOYUQ FİLESİ</h3></div><div class="price">8 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>TURŞULU ÇOLPA</h3></div><div class="price">25 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>ZOĞALLI ÇOLPA</h3></div><div class="price">22 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>TABAKA</h3></div><div class="price">20 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>XAMALI TOYUQ</h3></div><div class="price">22 ₼</div></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>ALBALILI TOYUQ QOVURMASI</h3></div><div class="price">₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=ALBALILI+TOYUQ" alt="ALBALILI TOYUQ QOVURMASI"><p class="desc">Albalı ilə şirin-turş toyuq qovurması.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>TOYUQ ÇIĞIRTMASI</h3></div><div class="price">20 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=TOYUQ+ÇIĞIRTMASI" alt="TOYUQ ÇIĞIRTMASI"><p class="desc">Klassik toyuq çığırtması, soğan və pomidorla.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>TOYUQ QOVURMASI</h3></div><div class="price">18 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=TOYUQ+QOVURMASI" alt="TOYUQ QOVURMASI"><p class="desc">Ev toyuğundan ənənəvi qovurma.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>QAYMAQLI TOYUQ FİLESİ</h3></div><div class="price">8 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=QAYMAQLI+FİLE" alt="QAYMAQLI TOYUQ FİLESİ"><p class="desc">Qaymaq sousunda bişirilmiş toyuq filesi.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>TURŞULU ÇOLPA</h3></div><div class="price">25 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=TURŞULU+ÇOLPA" alt="TURŞULU ÇOLPA"><p class="desc">Turşu ilə bişirilmiş çolpa — xüsusi dad.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>ZOĞALLI ÇOLPA</h3></div><div class="price">22 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=ZOĞALLI+ÇOLPA" alt="ZOĞALLI ÇOLPA"><p class="desc">Zoğal sousu ilə çolpa.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>TABAKA</h3></div><div class="price">20 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=TABAKA" alt="TABAKA"><p class="desc">Tavada bişirilmiş toyuq tabaka.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>XAMALI TOYUQ</h3></div><div class="price">22 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=XAMALI+TOYUQ" alt="XAMALI TOYUQ"><p class="desc">Xama sousunda bişirilmiş toyuq.</p></div>
+      </details></div>
+
     </div>
   </details>
 
-  <!-- ƏTLİ YEMƏKLƏRİ -->
+  <!-- ========== ƏTLİ YEMƏKLƏRİ ========== -->
   <details class="category">
     <summary>🍖 ƏTLİ YEMƏKLƏRİ</summary>
     <div class="category-items">
-      <div class="item"><div class="item-info"><h3>ALBALILI MAL QOVURMASI</h3></div><div class="price">10 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>BASDIRMA QOVURMASI</h3></div><div class="price">10 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>BUĞLAMA</h3><p>1 KG</p></div><div class="price">30 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>GÖBƏLƏKLİ QUZU ƏTİ</h3></div><div class="price">12 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>QUZU QOVURMA</h3></div><div class="price">10 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>ZOĞALLI, ŞABALIDLI MAL QOVURMASI</h3></div><div class="price">11 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>ŞİRƏLİ DANA</h3></div><div class="price">3 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>XAMALI QUZU ARSALASI</h3></div><div class="price">8 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>XAMALI BASDIRMA</h3></div><div class="price">8 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>ZOĞALLI PLOV</h3></div><div class="price">20 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>ŞAH PLOV</h3></div><div class="price">25 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>"BƏY" QOVURMASI</h3></div><div class="price">15 ₼</div></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>ALBALILI MAL QOVURMASI</h3></div><div class="price">10 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=ALBALILI+MAL" alt="ALBALILI MAL QOVURMASI"><p class="desc">Albalı ilə mal əti qovurması.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>BASDIRMA QOVURMASI</h3></div><div class="price">10 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=BASDIRMA+QOVURMA" alt="BASDIRMA QOVURMASI"><p class="desc">Basdırma ilə ənənəvi qovurma.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>BUĞLAMA</h3><p>1 KG</p></div><div class="price">30 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=BUĞLAMA" alt="BUĞLAMA"><p class="desc">1 kq buğlama — ənənəvi üsulla bişirilmiş quzu əti.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>GÖBƏLƏKLİ QUZU ƏTİ</h3></div><div class="price">12 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=GÖBƏLƏKLİ+QUZU" alt="GÖBƏLƏKLİ QUZU ƏTİ"><p class="desc">Göbələk ilə bişirilmiş quzu əti.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>QUZU QOVURMA</h3></div><div class="price">10 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=QUZU+QOVURMA" alt="QUZU QOVURMA"><p class="desc">Ev şəraitində quzu qovurma.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>ZOĞALLI, ŞABALIDLI MAL QOVURMASI</h3></div><div class="price">11 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=ZOĞALLI+MAL" alt="ZOĞALLI MAL QOVURMASI"><p class="desc">Zoğal və şabalıd ilə mal əti qovurması.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>ŞİRƏLİ DANA</h3></div><div class="price">3 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=ŞİRƏLİ+DANA" alt="ŞİRƏLİ DANA"><p class="desc">Şirəli dana əti.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>XAMALI QUZU ARSALASI</h3></div><div class="price">8 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=XAMALI+QUZU" alt="XAMALI QUZU ARSALASI"><p class="desc">Xama sousunda quzu arsalası.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>XAMALI BASDIRMA</h3></div><div class="price">8 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=XAMALI+BASDIRMA" alt="XAMALI BASDIRMA"><p class="desc">Xama sousunda basdırma.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>ZOĞALLI PLOV</h3></div><div class="price">20 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=ZOĞALLI+PLOV" alt="ZOĞALLI PLOV"><p class="desc">Zoğal ilə ənənəvi plov.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>ŞAH PLOV</h3></div><div class="price">25 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=ŞAH+PLOV" alt="ŞAH PLOV"><p class="desc">Şah plov — xüsusi tədbirlər üçün.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>"BƏY" QOVURMASI</h3></div><div class="price">15 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=BƏY+QOVURMASI" alt="BƏY QOVURMASI"><p class="desc">Restoranın xüsusi qovurması.</p></div>
+      </details></div>
+
     </div>
   </details>
 
-  <!-- AVROPA MƏTBƏXİ -->
+  <!-- ========== AVROPA MƏTBƏXİ ========== -->
   <details class="category">
     <summary>🍝 AVROPA MƏTBƏXİ</summary>
     <div class="category-items">
-      <div class="item"><div class="item-info"><h3>GÖBƏLƏK SOUSLU CAN ƏTİ RULETİ</h3></div><div class="price">9 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>İTALYAN SAYAĞI CAN ƏTİ</h3></div><div class="price">10 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>KİYEV KOTLETİ</h3></div><div class="price">9 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>LANGET MAL ƏTİ</h3></div><div class="price">6 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>LANGET TOYUQ ƏTİ</h3></div><div class="price">5 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>MONASTIR SAYAĞI</h3></div><div class="price">7 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>BEEFSTROGANOFF</h3></div><div class="price">7 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>PORTAĞALLI TOYUQ FİLESİ</h3></div><div class="price">10 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>PİROQDA CİYƏR LANGETİ</h3></div><div class="price">7 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>GÖBƏLƏK QOVURMASI</h3></div><div class="price">5 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>JULYEN</h3></div><div class="price">5 ₼</div></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>GÖBƏLƏK SOUSLU CAN ƏTİ RULETİ</h3></div><div class="price">9 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=CAN+ƏTİ+RULETİ" alt="GÖBƏLƏK SOUSLU CAN ƏTİ RULETİ"><p class="desc">Göbələk sousunda can əti ruleti.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>İTALYAN SAYAĞI CAN ƏTİ</h3></div><div class="price">10 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=İTALYAN+CAN+ƏTİ" alt="İTALYAN SAYAĞI CAN ƏTİ"><p class="desc">İtalyan üslubunda bişirilmiş can əti.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>KİYEV KOTLETİ</h3></div><div class="price">9 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=KİYEV+KOTLETİ" alt="KİYEV KOTLETİ"><p class="desc">Klassik Kiyev kotleti — yağ içlikli.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>LANGET MAL ƏTİ</h3></div><div class="price">6 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=LANGET+MAL" alt="LANGET MAL ƏTİ"><p class="desc">Mal ətindən langet.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>LANGET TOYUQ ƏTİ</h3></div><div class="price">5 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=LANGET+TOYUQ" alt="LANGET TOYUQ ƏTİ"><p class="desc">Toyuq ətindən langet.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>MONASTIR SAYAĞI</h3></div><div class="price">7 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=MONASTIR" alt="MONASTIR SAYAĞI"><p class="desc">Monastır üslubunda ət yeməyi.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>BEEFSTROGANOFF</h3></div><div class="price">7 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=BEEFSTROGANOFF" alt="BEEFSTROGANOFF"><p class="desc">Klassik befstroqanov — qaymaq sousunda.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>PORTAĞALLI TOYUQ FİLESİ</h3></div><div class="price">10 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=PORTAĞALLI+FİLE" alt="PORTAĞALLI TOYUQ FİLESİ"><p class="desc">Portağal sousunda toyuq filesi.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>PİROQDA CİYƏR LANGETİ</h3></div><div class="price">7 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=CİYƏR+LANGETİ" alt="PİROQDA CİYƏR LANGETİ"><p class="desc">Piroqda bişirilmiş ciyər langeti.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>GÖBƏLƏK QOVURMASI</h3></div><div class="price">5 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=GÖBƏLƏK+QOVURMA" alt="GÖBƏLƏK QOVURMASI"><p class="desc">Təzə göbələklərdən qovurma.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>JULYEN</h3></div><div class="price">5 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=JULYEN" alt="JULYEN"><p class="desc">Göbələk və pendirdən Julyen.</p></div>
+      </details></div>
+
     </div>
   </details>
 
-  <!-- SAC -->
+  <!-- ========== SAC ========== -->
   <details class="category">
     <summary>🍝 SAC</summary>
     <div class="category-items">
-      <div class="item"><div class="item-info"><h3>TOYUQ SACI</h3></div><div class="price">22 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>MAL SACI</h3></div><div class="price">25 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>QUZU SACI</h3></div><div class="price">28 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>QARIŞIQ SAC</h3></div><div class="price">35 ₼</div></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>TOYUQ SACI</h3></div><div class="price">22 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=TOYUQ+SACI" alt="TOYUQ SACI"><p class="desc">Sacda bişirilmiş toyuq.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>MAL SACI</h3></div><div class="price">25 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=MAL+SACI" alt="MAL SACI"><p class="desc">Sacda bişirilmiş mal əti.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>QUZU SACI</h3></div><div class="price">28 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=QUZU+SACI" alt="QUZU SACI"><p class="desc">Sacda bişirilmiş quzu əti.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>QARIŞIQ SAC</h3></div><div class="price">35 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=QARIŞIQ+SAC" alt="QARIŞIQ SAC"><p class="desc">Qarışıq ət sacı.</p></div>
+      </details></div>
+
     </div>
   </details>
 
-  <!-- XƏMƏR YEMƏKLƏRİ -->
+  <!-- ========== XƏMƏR YEMƏKLƏRİ ========== -->
   <details class="category">
     <summary>🍝 XƏMƏR YEMƏKLƏRİ</summary>
     <div class="category-items">
-      <div class="item"><div class="item-info"><h3>GÜRZƏ</h3></div><div class="price"> ₼</div></div>
-      <div class="item"><div class="item-info"><h3>QIYMALI XƏNGƏL</h3></div><div class="price">6 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>GÜRCÜ XƏNGƏLİ</h3><p>1 ШТУКА</p></div><div class="price">1 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>GÜRCÜ XƏNGƏLİ QIZARTMASI</h3><p>1 ШТУКА</p></div><div class="price">1.5 ₼</div></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>GÜRZƏ</h3></div><div class="price">₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=GÜRZƏ" alt="GÜRZƏ"><p class="desc">Ənənəvi gürzə.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>QIYMALI XƏNGƏL</h3></div><div class="price">6 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=QIYMALI+XƏNGƏL" alt="QIYMALI XƏNGƏL"><p class="desc">Qiyma içlikli xəngəl.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>GÜRCÜ XƏNGƏLİ</h3><p>1 ШТУКА</p></div><div class="price">1 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=GÜRCÜ+XƏNGƏLİ" alt="GÜRCÜ XƏNGƏLİ"><p class="desc">Gürcü xəngəli — 1 ədəd.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>GÜRCÜ XƏNGƏLİ QIZARTMASI</h3><p>1 ШТУКА</p></div><div class="price">1.5 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=GÜRCÜ+QIZARTMA" alt="GÜRCÜ XƏNGƏLİ QIZARTMASI"><p class="desc">Qızardılmış gürcü xəngəli — 1 ədəd.</p></div>
+      </details></div>
+
     </div>
   </details>
 
-  <!-- KABABLAR -->
+  <!-- ========== KABABLAR ========== -->
   <details class="category">
     <summary>🍝 KABABLAR</summary>
     <div class="category-items">
-      <div class="item"><div class="item-info"><h3>TİKƏ</h3></div><div class="price">7 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>DÖYMƏ</h3></div><div class="price">7 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>BASDIRMA</h3></div><div class="price">8 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>XAMALI BASDIRMA</h3></div><div class="price">8 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>ANTRİKOT</h3></div><div class="price">8 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>SETKADA TOYUQ</h3></div><div class="price">20 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>İÇALAT</h3></div><div class="price">5 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>TOYUQ DÖŞ KABABI</h3></div><div class="price">5 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>TOYUQ LÜLƏSİ</h3></div><div class="price"> ₼</div></div>
-      <div class="item"><div class="item-info"><h3>KARTOF KABABI QUYRUQLU</h3></div><div class="price"> ₼</div></div>
-      <div class="item"><div class="item-info"><h3>KARTOF KABABI KÜLLƏMƏ</h3></div><div class="price"> ₼</div></div>
-      <div class="item"><div class="item-info"><h3>KARTOF LÜLƏSİ</h3></div><div class="price"> ₼</div></div>
-      <div class="item"><div class="item-info"><h3>BADIMCAN KABABI</h3></div><div class="price">1 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>POMİDOR KABABI</h3></div><div class="price">1 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>BİBER KABABI</h3></div><div class="price">1 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>"BƏY" SETİ</h3></div><div class="price">₼</div></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>TİKƏ</h3></div><div class="price">7 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=TİKƏ+KABAB" alt="TİKƏ"><p class="desc">Mal ətindən tikə kabab.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>DÖYMƏ</h3></div><div class="price">7 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=DÖYMƏ" alt="DÖYMƏ"><p class="desc">Klassik döymə kabab.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>BASDIRMA</h3></div><div class="price">8 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=BASDIRMA" alt="BASDIRMA"><p class="desc">Basdırma kababı.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>XAMALI BASDIRMA</h3></div><div class="price">8 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=XAMALI+BASDIRMA" alt="XAMALI BASDIRMA"><p class="desc">Xama ilə basdırma kababı.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>ANTRİKOT</h3></div><div class="price">8 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=ANTRİKOT" alt="ANTRİKOT"><p class="desc">Mal əti antrikotu.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>SETKADA TOYUQ</h3></div><div class="price">20 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=SETKADA+TOYUQ" alt="SETKADA TOYUQ"><p class="desc">Setkada bişirilmiş toyuq.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>İÇALAT</h3></div><div class="price">5 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=İÇALAT" alt="İÇALAT"><p class="desc">İçalat kababı.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>TOYUQ DÖŞ KABABI</h3></div><div class="price">5 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=TOYUQ+DÖŞ" alt="TOYUQ DÖŞ KABABI"><p class="desc">Toyuq döşündən kabab.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>TOYUQ LÜLƏSİ</h3></div><div class="price">₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=TOYUQ+LÜLƏ" alt="TOYUQ LÜLƏSİ"><p class="desc">Toyuq lüləsi.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>KARTOF KABABI QUYRUQLU</h3></div><div class="price">₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=KARTOF+QUYRUQLU" alt="KARTOF KABABI QUYRUQLU"><p class="desc">Quyruqlu kartof kababı.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>KARTOF KABABI KÜLLƏMƏ</h3></div><div class="price">₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=KARTOF+KÜLLƏMƏ" alt="KARTOF KABABI KÜLLƏMƏ"><p class="desc">Külləmə kartof kababı.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>KARTOF LÜLƏSİ</h3></div><div class="price">₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=KARTOF+LÜLƏ" alt="KARTOF LÜLƏSİ"><p class="desc">Kartof lüləsi.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>BADIMCAN KABABI</h3></div><div class="price">1 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=BADIMCAN" alt="BADIMCAN KABABI"><p class="desc">Badımcan kababı.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>POMİDOR KABABI</h3></div><div class="price">1 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=POMİDOR" alt="POMİDOR KABABI"><p class="desc">Pomidor kababı.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>BİBER KABABI</h3></div><div class="price">1 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=BİBER" alt="BİBER KABABI"><p class="desc">Biber kababı.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>"BƏY" SETİ</h3></div><div class="price">₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=BƏY+SETİ" alt="BƏY SETİ"><p class="desc">Restoranın xüsusi kabab seti.</p></div>
+      </details></div>
+
     </div>
   </details>
 
-  <!-- FASTFOOD -->
+  <!-- ========== FASTFOOD ========== -->
   <details class="category">
     <summary>🍝 FASTFOOD</summary>
     <div class="category-items">
-      <div class="item"><div class="item-info"><h3>BEEFBURGER+ KARTOF FREE</h3></div><div class="price"> ₼</div></div>
-      <div class="item"><div class="item-info"><h3>CHİKENBURGER+ KARTOF FREE</h3></div><div class="price">5 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>KARTOF FREE</h3></div><div class="price">3.50 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>NAGGETS</h3></div><div class="price">3 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>PENDİR ÇUBUQLARI</h3></div><div class="price">5 ₼</div></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>BEEFBURGER+ KARTOF FREE</h3></div><div class="price">₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=BEEFBURGER" alt="BEEFBURGER"><p class="desc">Mal əti burgeri + kartof free.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>CHİKENBURGER+ KARTOF FREE</h3></div><div class="price">5 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=CHİKENBURGER" alt="CHİKENBURGER"><p class="desc">Toyuq burgeri + kartof free.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>KARTOF FREE</h3></div><div class="price">3.50 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=KARTOF+FREE" alt="KARTOF FREE"><p class="desc">Qızardılmış kartof free.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>NAGGETS</h3></div><div class="price">3 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=NAGGETS" alt="NAGGETS"><p class="desc">Toyuq naggets.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>PENDİR ÇUBUQLARI</h3></div><div class="price">5 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=PENDİR+ÇUBUQLARI" alt="PENDİR ÇUBUQLARI"><p class="desc">Qızardılmış pendir çubuqları.</p></div>
+      </details></div>
+
     </div>
   </details>
 
-  <!-- QARNİR -->
+  <!-- ========== QARNİR ========== -->
   <details class="category">
     <summary>🍝 QARNİR</summary>
     <div class="category-items">
-      <div class="item"><div class="item-info"><h3>EVSAYAĞI KARTOF</h3></div><div class="price">3 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>QARABAŞAQ</h3></div><div class="price">2 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>SPAGETTİ</h3></div><div class="price">3 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>DÜYÜ</h3></div><div class="price">2 ₼</div></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>EVSAYAĞI KARTOF</h3></div><div class="price">3 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=EVSAYAĞI+KARTOF" alt="EVSAYAĞI KARTOF"><p class="desc">Ev sayağı kartof.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>QARABAŞAQ</h3></div><div class="price">2 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=QARABAŞAQ" alt="QARABAŞAQ"><p class="desc">Qarabaşaq yarması.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>SPAGETTİ</h3></div><div class="price">3 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=SPAGETTİ" alt="SPAGETTİ"><p class="desc">Spagetti qarnir.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>DÜYÜ</h3></div><div class="price">2 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=DÜYÜ" alt="DÜYÜ"><p class="desc">Düyü qarnir.</p></div>
+      </details></div>
+
     </div>
   </details>
 
-  <!-- SOUSLAR -->
+  <!-- ========== SOUSLAR ========== -->
   <details class="category">
     <summary>🍝 SOUSLAR</summary>
     <div class="category-items">
-      <div class="item"><div class="item-info"><h3>KETÇUP</h3></div><div class="price">1 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>MAYONEZ</h3></div><div class="price">1 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>TARTAR SOUSU</h3></div><div class="price">2 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>KLASSİK SOUSU</h3></div><div class="price">2 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>SOYA SOUSU</h3></div><div class="price">2 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>NARŞƏRAB</h3></div><div class="price">2 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>PENDİR SOUSU</h3></div><div class="price">2 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>ZOĞAL TURŞUSU</h3></div><div class="price">2 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>ALÇA TURŞUSU</h3></div><div class="price">2 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>ACİKA</h3></div><div class="price">2 ₼</div></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>KETÇUP</h3></div><div class="price">1 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=KETÇUP" alt="KETÇUP"><p class="desc">Ketçup sousu.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>MAYONEZ</h3></div><div class="price">1 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=MAYONEZ" alt="MAYONEZ"><p class="desc">Mayonez sousu.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>TARTAR SOUSU</h3></div><div class="price">2 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=TARTAR" alt="TARTAR SOUSU"><p class="desc">Tartar sousu.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>KLASSİK SOUSU</h3></div><div class="price">2 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=KLASSİK" alt="KLASSİK SOUSU"><p class="desc">Klassik sous.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>SOYA SOUSU</h3></div><div class="price">2 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=SOYA" alt="SOYA SOUSU"><p class="desc">Soya sousu.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>NARŞƏRAB</h3></div><div class="price">2 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=NARŞƏRAB" alt="NARŞƏRAB"><p class="desc">Narşərab sousu.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>PENDİR SOUSU</h3></div><div class="price">2 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=PENDİR+SOUSU" alt="PENDİR SOUSU"><p class="desc">Pendir sousu.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>ZOĞAL TURŞUSU</h3></div><div class="price">2 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=ZOĞAL" alt="ZOĞAL TURŞUSU"><p class="desc">Zoğal turşusu.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>ALÇA TURŞUSU</h3></div><div class="price">2 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=ALÇA" alt="ALÇA TURŞUSU"><p class="desc">Alça turşusu.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>ACİKA</h3></div><div class="price">2 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=ACİKA" alt="ACİKA"><p class="desc">Acika sousu.</p></div>
+      </details></div>
+
     </div>
   </details>
 
-  <!-- SOYUQ İÇKİLƏR -->
+  <!-- ========== SOYUQ İÇKİLƏR ========== -->
   <details class="category">
     <summary>🍝 SOYUQ İÇKİLƏR</summary>
     <div class="category-items">
-      <div class="item"><div class="item-info"><h3>COCA-COLA</h3><p>1 lt</p></div><div class="price">3 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>FANTA</h3><p>1 lt</p></div><div class="price">3 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>SPRİTE</h3><p>1 lt</p></div><div class="price">3 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>SİRAB QAZSIZ</h3><p>0.5 lt</p></div><div class="price">2 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>SİRAB QAZLI</h3><p>0.5 lt</p></div><div class="price">2.50 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>LİMONAD DÜŞEŞ</h3></div><div class="price">2.50 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>LİMONAD TƏRXUN</h3></div><div class="price">2.50 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>KOMPOT</h3><p>1 lt</p></div><div class="price">4 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>MEYVƏ ŞİRLƏSİ</h3><p>1 lt</p></div><div class="price"> ₼</div></div>
-      <div class="item"><div class="item-info"><h3>AYRAN</h3><p>1 lt</p></div><div class="price">3.50 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>AYRAN</h3><p>1 stəkan</p></div><div class="price">1 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>DOVĞA</h3><p>1 lt</p></div><div class="price">5 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>DOVĞA</h3><p>1 stəkan</p></div><div class="price">1.50 ₼</div></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>COCA-COLA</h3><p>1 lt</p></div><div class="price">3 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=COCA-COLA" alt="COCA-COLA"><p class="desc">Coca-Cola 1 litr.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>FANTA</h3><p>1 lt</p></div><div class="price">3 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=FANTA" alt="FANTA"><p class="desc">Fanta 1 litr.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>SPRİTE</h3><p>1 lt</p></div><div class="price">3 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=SPRİTE" alt="SPRİTE"><p class="desc">Sprite 1 litr.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>SİRAB QAZSIZ</h3><p>0.5 lt</p></div><div class="price">2 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=SİRAB+QAZSIZ" alt="SİRAB QAZSIZ"><p class="desc">Qazsız şirə 0.5 litr.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>SİRAB QAZLI</h3><p>0.5 lt</p></div><div class="price">2.50 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=SİRAB+QAZLI" alt="SİRAB QAZLI"><p class="desc">Qazlı şirə 0.5 litr.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>LİMONAD DÜŞEŞ</h3></div><div class="price">2.50 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=LİMONAD+DÜŞEŞ" alt="LİMONAD DÜŞEŞ"><p class="desc">Ev limonadı — düşeş.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>LİMONAD TƏRXUN</h3></div><div class="price">2.50 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=LİMONAD+TƏRXUN" alt="LİMONAD TƏRXUN"><p class="desc">Ev limonadı — tərxun.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>KOMPOT</h3><p>1 lt</p></div><div class="price">4 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=KOMPOT" alt="KOMPOT"><p class="desc">Ev kompotu 1 litr.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>MEYVƏ ŞİRLƏSİ</h3><p>1 lt</p></div><div class="price">₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=MEYVƏ+ŞİRLƏSİ" alt="MEYVƏ ŞİRLƏSİ"><p class="desc">Meyvə şirəsi 1 litr.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>AYRAN</h3><p>1 lt</p></div><div class="price">3.50 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=AYRAN+1L" alt="AYRAN 1LT"><p class="desc">Ayran 1 litr.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>AYRAN</h3><p>1 stəkan</p></div><div class="price">1 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=AYRAN+STƏKAN" alt="AYRAN STƏKAN"><p class="desc">Ayran 1 stəkan.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>DOVĞA</h3><p>1 lt</p></div><div class="price">5 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=DOVĞA+1L" alt="DOVĞA 1LT"><p class="desc">Dovğa 1 litr.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>DOVĞA</h3><p>1 stəkan</p></div><div class="price">1.50 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=DOVĞA+STƏKAN" alt="DOVĞA STƏKAN"><p class="desc">Dovğa 1 stəkan.</p></div>
+      </details></div>
+
     </div>
   </details>
 
-  <!-- İSTİ İÇKİLƏR -->
+  <!-- ========== İSTİ İÇKİLƏR ========== -->
   <details class="category">
     <summary>🍝 İSTİ İÇKİLƏR</summary>
     <div class="category-items">
-      <div class="item"><div class="item-info"><h3>ÇAY BALACA</h3></div><div class="price">3 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>ÇAY ORTA</h3></div><div class="price">4 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>ÇAY BÖYÜK</h3></div><div class="price">5 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>ÇAY SAMOVAR</h3></div><div class="price">15 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>QOZLU KOFE</h3></div><div class="price">3 ₼</div></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>ÇAY BALACA</h3></div><div class="price">3 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=ÇAY+BALACA" alt="ÇAY BALACA"><p class="desc">Kiçik çaydanlıq çay.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>ÇAY ORTA</h3></div><div class="price">4 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=ÇAY+ORTA" alt="ÇAY ORTA"><p class="desc">Orta çaydanlıq çay.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>ÇAY BÖYÜK</h3></div><div class="price">5 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=ÇAY+BÖYÜK" alt="ÇAY BÖYÜK"><p class="desc">Böyük çaydanlıq çay.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>ÇAY SAMOVAR</h3></div><div class="price">15 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=ÇAY+SAMOVAR" alt="ÇAY SAMOVAR"><p class="desc">Samovar çay.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>QOZLU KOFE</h3></div><div class="price">3 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=QOZLU+KOFE" alt="QOZLU KOFE"><p class="desc">Qozlu kofe.</p></div>
+      </details></div>
+
     </div>
   </details>
 
-  <!-- DESERTLƏR -->
+  <!-- ========== DESERTLƏR ========== -->
   <details class="category">
     <summary>🍝 DESERTLƏR</summary>
     <div class="category-items">
-      <div class="item"><div class="item-info"><h3>ALPEN GOLD</h3></div><div class="price">3 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>SNİKERS</h3></div><div class="price">2 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>VAFLİ</h3></div><div class="price">2 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>PEÇENYE</h3></div><div class="price">2 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>QARISIQ ÇƏRƏZ</h3></div><div class="price">5 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>XURMA</h3></div><div class="price">2 ₼</div></div>
-      <div class="item"><div class="item-info"><h3>MÜRƏBBƏ</h3></div><div class="price">5 ₼</div></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>ALPEN GOLD</h3></div><div class="price">3 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=ALPEN+GOLD" alt="ALPEN GOLD"><p class="desc">Alpen Gold şokolad.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>SNİKERS</h3></div><div class="price">2 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=SNİKERS" alt="SNİKERS"><p class="desc">Snickers baton.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>VAFLİ</h3></div><div class="price">2 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=VAFLİ" alt="VAFLİ"><p class="desc">Vafli.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>PEÇENYE</h3></div><div class="price">2 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=PEÇENYE" alt="PEÇENYE"><p class="desc">Peçenye.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>QARISIQ ÇƏRƏZ</h3></div><div class="price">5 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=QARISIQ+ÇƏRƏZ" alt="QARISIQ ÇƏRƏZ"><p class="desc">Qarışıq çərəz.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>XURMA</h3></div><div class="price">2 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=XURMA" alt="XURMA"><p class="desc">Xurma.</p></div>
+      </details></div>
+
+      <div class="item"><details class="item-details">
+        <summary><div class="item-info"><h3>MÜRƏBBƏ</h3></div><div class="price">5 ₼</div></summary>
+        <div class="item-extra"><img src="https://via.placeholder.com/600x300?text=MÜRƏBBƏ" alt="MÜRƏBBƏ"><p class="desc">Ev mürəbbəsi.</p></div>
+      </details></div>
+
     </div>
   </details>
 
   <footer>
-    © Restoran "Bəy Bağı" · Работаем ежедневно с 9:00 до 22:00
+    © Restoran "Bəy Bağı" · Developed by Noisevertyk
   </footer>
 
 </div>
+
+<!-- ===== ПЛАВАЮЩАЯ КНОПКА WHATSAPP ===== -->
+<a class="whatsapp-btn"
+   href="https://wa.me/994552128226"
+   target="_blank"
+   rel="noopener"
+   aria-label="WhatsApp">
+  <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M16.001 3.2C8.94 3.2 3.2 8.94 3.2 16c0 2.26.6 4.46 1.72 6.4L3.2 28.8l6.56-1.72A12.77 12.77 0 0 0 16 28.8c7.06 0 12.8-5.74 12.8-12.8S23.06 3.2 16.001 3.2zm0 23.04c-2.02 0-4-.54-5.72-1.56l-.4-.24-4.06 1.06 1.08-3.94-.26-.42A10.2 10.2 0 0 1 5.76 16c0-5.64 4.6-10.24 10.24-10.24S26.24 10.36 26.24 16 21.64 26.24 16 26.24zm5.62-7.68c-.3-.16-1.8-.9-2.08-1-.28-.1-.48-.16-.68.16-.2.3-.78 1-.96 1.2-.18.2-.36.22-.66.08-.3-.16-1.28-.48-2.44-1.5-.9-.8-1.5-1.78-1.68-2.08-.18-.3-.02-.46.12-.62.12-.14.3-.36.44-.54.14-.18.18-.3.28-.5.1-.2.04-.38-.02-.54-.06-.16-.68-1.64-.94-2.24-.24-.58-.5-.5-.68-.5l-.58-.02c-.2 0-.52.08-.8.38-.28.3-1.04 1.02-1.04 2.48s1.06 2.88 1.2 3.08c.14.2 2.06 3.16 5 4.42.7.3 1.24.48 1.66.62.7.22 1.34.2 1.84.12.56-.08 1.8-.74 2.06-1.46.26-.72.26-1.34.18-1.46-.08-.12-.28-.2-.58-.36z"/>
+  </svg>
+  <span>+994 55 212 82 26</span>
+</a>
+
 </body>
 </html>
