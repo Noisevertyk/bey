@@ -515,6 +515,97 @@
   .add-to-cart-btn:hover { background: #a0522d; }
   .add-to-cart-btn.added { background: #25D366; }
 
+  /* ===== Axtarış sahəsi ===== */
+  .search-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 900;
+    background: #faf7f2;
+    padding: 12px 20px;
+    margin: 0 -20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    transition: box-shadow 0.2s ease;
+  }
+  .search-wrap.stuck {
+    box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+  }
+  @media (min-width: 681px) {
+    .search-wrap {
+      margin: 0;
+      padding: 12px 0;
+      background: transparent;
+      box-shadow: none;
+    }
+    .search-wrap.stuck {
+      background: #faf7f2;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      padding: 12px 20px;
+      margin: 0 -20px;
+      border-radius: 0 0 16px 16px;
+    }
+  }
+  .search-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border: 1.5px solid #e0d5c5;
+    border-radius: 14px;
+    padding: 10px 14px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .search-box:focus-within {
+    border-color: #a0522d;
+    box-shadow: 0 0 0 3px rgba(160,82,45,0.12);
+  }
+  .search-box svg {
+    width: 20px; height: 20px;
+    fill: #a0522d;
+    flex-shrink: 0;
+  }
+  .search-box input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    color: #2b2b2b;
+    background: transparent;
+    font-family: inherit;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .search-box input::-webkit-search-cancel-button { display: none; }
+  .search-box input::placeholder { color: #bbb; }
+  .search-clear {
+    border: none;
+    background: #f0ebe3;
+    color: #6b4226;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    font-size: 14px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.15s ease;
+  }
+  .search-clear:hover { background: #ffe9d6; }
+  .search-clear.visible { display: flex; }
+
+  .no-results {
+    text-align: center;
+    color: #999;
+    font-size: 15px;
+    padding: 40px 20px;
+    display: none;
+  }
+  .no-results.visible { display: block; }
+  .no-results strong { color: #6b4226; }
+
+  .item.hidden, details.category.hidden { display: none; }
+
   @media (max-width: 420px) {
     .cart-panel { left: 10px; right: 10px; width: auto; bottom: 86px; }
     .cart-fab { left: 14px; bottom: 14px; width: 54px; height: 54px; }
@@ -535,7 +626,22 @@
   </div>
 </header>
 
+<div class="search-wrap" id="searchWrap">
+  <div class="search-box">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/>
+    </svg>
+    <input type="search" id="searchInput" placeholder="Yemək axtar..." autocomplete="off" aria-label="Menyuda axtarış">
+    <button class="search-clear" id="searchClear" type="button" aria-label="Təmizlə">✕</button>
+  </div>
+</div>
+
 <div class="container">
+
+  <div class="no-results" id="noResults">
+    Heç nə tapılmadı: <strong id="noResultsQuery"></strong><br>
+    <small>Başqa söz ilə yoxlayın</small>
+  </div>
 
   <!-- ========== SƏHƏR YEMƏKLƏRİ ========== -->
   <details class="category">
@@ -1649,6 +1755,115 @@
     }[c]));
   }
   function escapeAttr(s) { return escapeHtml(s); }
+
+  /* ===== Axtarış ===== */
+  const searchInput = document.getElementById('searchInput');
+  const searchClear = document.getElementById('searchClear');
+  const searchWrap  = document.getElementById('searchWrap');
+  const noResults   = document.getElementById('noResults');
+  const noResultsQuery = document.getElementById('noResultsQuery');
+
+  // Azərbaycan hərflərini normallaşdır
+  function normalize(str) {
+    return String(str)
+      .toLowerCase()
+      .replace(/ə/g, 'e')
+      .replace(/ı/g, 'i')
+      .replace(/ş/g, 's')
+      .replace(/ç/g, 'c')
+      .replace(/ğ/g, 'g')
+      .replace(/ö/g, 'o')
+      .replace(/ü/g, 'u')
+      .replace(/[^\w\s\u0400-\u04FF]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  // Hər item üçün axtarış indeksi hazırla
+  document.querySelectorAll('.item').forEach(itemEl => {
+    const nameEl  = itemEl.querySelector('.item-info h3');
+    const descEl  = itemEl.querySelector('.item-info p');
+    const extraEl = itemEl.querySelector('.item-extra .desc');
+    const text = [
+      nameEl ? nameEl.textContent : '',
+      descEl ? descEl.textContent : '',
+      extraEl ? extraEl.textContent : ''
+    ].join(' ');
+    itemEl.dataset.search = normalize(text);
+  });
+
+  const allCategories = document.querySelectorAll('details.category');
+
+  function applySearch(query) {
+    const q = normalize(query);
+    const hasQuery = q.length > 0;
+
+    // Düymə görünüşü
+    searchClear.classList.toggle('visible', hasQuery);
+
+    let totalVisible = 0;
+
+    allCategories.forEach(cat => {
+      const items = cat.querySelectorAll('.item');
+      let visibleInCat = 0;
+
+      items.forEach(itemEl => {
+        const match = !hasQuery || itemEl.dataset.search.includes(q);
+        itemEl.classList.toggle('hidden', !match);
+        if (match) visibleInCat++;
+      });
+
+      cat.classList.toggle('hidden', visibleInCat === 0);
+      totalVisible += visibleInCat;
+
+      // Axtarış varsa və kateqoriyada nəticə varsa — aç
+      if (hasQuery && visibleInCat > 0) {
+        cat.open = true;
+      } else if (!hasQuery) {
+        cat.open = false;
+      }
+    });
+
+    // "Heç nə tapılmadı" mesajı
+    if (hasQuery && totalVisible === 0) {
+      noResultsQuery.textContent = query.trim();
+      noResults.classList.add('visible');
+    } else {
+      noResults.classList.remove('visible');
+    }
+  }
+
+  // Debounce — yazarkən hər hərfdə deyil, 120ms sonra işlə
+  let searchTimer = null;
+  searchInput.addEventListener('input', () => {
+    clearTimeout(searchTimer);
+    const val = searchInput.value;
+    searchTimer = setTimeout(() => applySearch(val), 120);
+  });
+
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      searchInput.value = '';
+      applySearch('');
+      searchInput.blur();
+    }
+  });
+
+  searchClear.addEventListener('click', () => {
+    searchInput.value = '';
+    applySearch('');
+    searchInput.focus();
+  });
+
+  // Sticky kölgə — skrol edəndə
+  if (searchWrap) {
+    const sentinel = document.createElement('div');
+    searchWrap.parentNode.insertBefore(sentinel, searchWrap);
+    const io = new IntersectionObserver(([entry]) => {
+      searchWrap.classList.toggle('stuck', !entry.isIntersecting);
+    }, { threshold: 0 });
+    io.observe(sentinel);
+  }
 
   renderCart();
 })();
