@@ -2,10 +2,12 @@
 <html lang="az">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 <title>Restoran "Bəy Bağı" — Menyu</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
 
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
@@ -13,6 +15,7 @@
     color: #2b2b2b;
     line-height: 1.5;
     padding-bottom: 100px;
+    -webkit-text-size-adjust: 100%;
   }
 
   header {
@@ -412,7 +415,7 @@
     min-width: 0;
     border: none;
     outline: none;
-    font-size: 14px;
+    font-size: 16px;   /* ← 16px iOS üçün */
     font-weight: 700;
     color: #2b2b2b;
     background: transparent;
@@ -449,7 +452,7 @@
     border: none;
     outline: none;
     font-family: inherit;
-    font-size: 13.5px;
+    font-size: 16px;   /* ← 16px iOS üçün */
     color: #2b2b2b;
     background: transparent;
     padding: 2px 0;
@@ -568,7 +571,7 @@
     min-width: 0;
     border: none;
     outline: none;
-    font-size: 15px;
+    font-size: 16px;   /* ← 16px iOS üçün (zoom-un qarşısını alır) */
     color: #2b2b2b;
     background: transparent;
     font-family: inherit;
@@ -606,11 +609,51 @@
 
   .item.hidden, details.category.hidden { display: none; }
 
+  /* ===== Yuxarı qalx düyməsi ===== */
+  .scroll-top {
+    position: fixed;
+    right: 20px;
+    bottom: 92px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #fff;
+    color: #6b4226;
+    border: 1.5px solid #e0d5c5;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+    opacity: 0;
+    transform: translateY(12px) scale(0.85);
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s ease, color 0.2s ease;
+  }
+  .scroll-top.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+  .scroll-top:hover {
+    background: #6b4226;
+    color: #fff;
+    border-color: #6b4226;
+  }
+  .scroll-top:active { transform: scale(0.92); }
+  .scroll-top svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+  }
+
   @media (max-width: 420px) {
     .cart-panel { left: 10px; right: 10px; width: auto; bottom: 86px; }
     .cart-fab { left: 14px; bottom: 14px; width: 54px; height: 54px; }
     .whatsapp-btn { font-size: 13px; padding: 10px 16px; }
     .whatsapp-btn span { display: none; }
+    .scroll-top { right: 14px; bottom: 86px; width: 44px; height: 44px; }
   }
 </style>
 </head>
@@ -1447,6 +1490,13 @@
 
 </div>
 
+<!-- ===== YUXARI QALX DÜYMƏSİ ===== -->
+<button class="scroll-top" id="scrollTop" aria-label="Yuxarı qalx">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M12 4l-8 8h5v8h6v-8h5l-8-8z"/>
+  </svg>
+</button>
+
 <!-- ===== SƏBƏT DÜYMƏSİ ===== -->
 <button class="cart-fab" id="cartFab" aria-label="Səbət">
   <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -1531,7 +1581,6 @@
     try { localStorage.setItem(COMMENT_KEY, v); } catch (e) {}
   }
 
-  // Stol nömrəsini yaddaşdan bərpa et
   tableInput.value = loadTable();
   tableInput.addEventListener('input', () => {
     tableInput.value = tableInput.value.replace(/[^\w\s\u0400-\u04FF-]/g, '').slice(0, 6);
@@ -1539,7 +1588,6 @@
     tableField.classList.remove('error');
   });
 
-  // Şərhi yaddaşdan bərpa et + avtomatik hündürlük
   function autoResizeComment() {
     commentInput.style.height = 'auto';
     commentInput.style.height = Math.min(commentInput.scrollHeight, 90) + 'px';
@@ -1571,7 +1619,6 @@
     return { name: fullName, price, priceText };
   }
 
-  // Yemək kartlarında +/- və "Səbətə at" idarəsini qur
   document.querySelectorAll('.item').forEach(itemEl => {
     const data = getItemData(itemEl);
     if (!data) return;
@@ -1680,7 +1727,6 @@
     }).join('');
   }
 
-  // === Səbət içindəki kliklər paneli BAĞLAMAMALIDIR ===
   cartItemsEl.addEventListener('click', (e) => {
     e.stopPropagation();
     const btn = e.target.closest('button');
@@ -1694,7 +1740,6 @@
     else if (act === 'remove') removeItem(key);
   });
 
-  // Footer-dəki kliklər (Stol №, Şərh, Göndər) paneli BAĞLAMAMALIDIR
   document.querySelector('.cart-footer').addEventListener('click', (e) => {
     e.stopPropagation();
   });
@@ -1706,7 +1751,6 @@
   cartFab.addEventListener('click', (e) => { e.stopPropagation(); toggleCart(); });
   cartClose.addEventListener('click', (e) => { e.stopPropagation(); closeCart(); });
 
-  // Panel yalnız HƏQİQƏTƏN xaricdə klik olanda bağlanır.
   document.addEventListener('click', (e) => {
     if (!cartPanel.classList.contains('open')) return;
     const path = e.composedPath ? e.composedPath() : [];
@@ -1740,7 +1784,8 @@
       sum += lineSum;
       msg += `• ${it.name} — ${it.qty} əd. × ${formatSum(it.price)} ₼ = ${formatSum(lineSum)} ₼\n`;
     });
-    msg += `\nCəmi: ${formatSum(sum)} ₼`;
+    msg += `\nCəmi: ${formatSum(sum)} ₼\n`;
+    msg += `\nKart nömrəsi: 4613 8602 0447 9974`;
 
     const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
     window.open(url, '_blank');
@@ -1763,7 +1808,6 @@
   const noResults   = document.getElementById('noResults');
   const noResultsQuery = document.getElementById('noResultsQuery');
 
-  // Azərbaycan hərflərini normallaşdır
   function normalize(str) {
     return String(str)
       .toLowerCase()
@@ -1779,7 +1823,6 @@
       .trim();
   }
 
-  // Hər item üçün axtarış indeksi hazırla
   document.querySelectorAll('.item').forEach(itemEl => {
     const nameEl  = itemEl.querySelector('.item-info h3');
     const descEl  = itemEl.querySelector('.item-info p');
@@ -1798,7 +1841,6 @@
     const q = normalize(query);
     const hasQuery = q.length > 0;
 
-    // Düymə görünüşü
     searchClear.classList.toggle('visible', hasQuery);
 
     let totalVisible = 0;
@@ -1816,7 +1858,6 @@
       cat.classList.toggle('hidden', visibleInCat === 0);
       totalVisible += visibleInCat;
 
-      // Axtarış varsa və kateqoriyada nəticə varsa — aç
       if (hasQuery && visibleInCat > 0) {
         cat.open = true;
       } else if (!hasQuery) {
@@ -1824,7 +1865,6 @@
       }
     });
 
-    // "Heç nə tapılmadı" mesajı
     if (hasQuery && totalVisible === 0) {
       noResultsQuery.textContent = query.trim();
       noResults.classList.add('visible');
@@ -1833,7 +1873,6 @@
     }
   }
 
-  // Debounce — yazarkən hər hərfdə deyil, 120ms sonra işlə
   let searchTimer = null;
   searchInput.addEventListener('input', () => {
     clearTimeout(searchTimer);
@@ -1855,7 +1894,6 @@
     searchInput.focus();
   });
 
-  // Sticky kölgə — skrol edəndə
   if (searchWrap) {
     const sentinel = document.createElement('div');
     searchWrap.parentNode.insertBefore(sentinel, searchWrap);
@@ -1864,6 +1902,24 @@
     }, { threshold: 0 });
     io.observe(sentinel);
   }
+
+  /* ===== Yuxarı qalx düyməsi ===== */
+  const scrollTopBtn = document.getElementById('scrollTop');
+
+  function updateScrollTop() {
+    if (window.scrollY > 400) {
+      scrollTopBtn.classList.add('visible');
+    } else {
+      scrollTopBtn.classList.remove('visible');
+    }
+  }
+
+  window.addEventListener('scroll', updateScrollTop, { passive: true });
+  updateScrollTop();
+
+  scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 
   renderCart();
 })();
